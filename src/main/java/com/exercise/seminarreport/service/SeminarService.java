@@ -72,16 +72,17 @@ public class SeminarService {
                         throw new Error("Seminar service: Invalid date format.");
                     }
                 }else {
-                    if (isMatchPattern(line) && !line.isEmpty())  {
+                    if (isMatchPattern(line))  {
                         if (dateService.isNineAM(seminarDateTime)) {
                             response.setDay(getDayFormat(seminarDateTime, countDay));
                             response.setDayDetails(detailResponseList);
                             responseList.add(response);
+                            logger.info("Write "+response.getDay()+" "+ seminarDateTime.getDayOfWeek());
+                            response = new SeminarResponse();
                             if(countDay > 1) {
                                 detailResponseList = new ArrayList<>();
                             }
                             countDay++;
-                            logger.info("Write "+response.getDay()+" "+ seminarDateTime.getDayOfWeek());
                         }
 
                         line = line.trim();
@@ -104,12 +105,8 @@ public class SeminarService {
                             seminarDateTime = checkWeekend(seminarDateTime);
                         } else {
                             detailResponseList.add(appendSeminarDetail(seminarDateTime, line));
-//                        if(isLastIndexAndEndDay(newTime)){
-//                            appendNetworkingEvent(timeline, newTime);
-//                        }
                             seminarDateTime = newTime;
                         }
-
                     }
                 }
             }
