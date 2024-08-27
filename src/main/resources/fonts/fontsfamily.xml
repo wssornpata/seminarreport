@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+    <fontFamily name="THSarabunNew">
+        <!-- Normal Arial Font -->
+        <normal><![CDATA[fonts/THSarabunNew/THSarabunNew.ttf]]></normal> <!-- location of the nornal font on resource folder -->
+        <!-- Bold Arial Font -->
+        <bold><![CDATA[fonts/THSarabunNew/THSarabunNewBold.ttf]]></bold>
+        <!-- Italic Arial Font -->
+        <italic><![CDATA[fonts/THSarabunNew/THSarabunNewItalic.ttf]]></italic>
+        <!-- Bolt italic Arial Font -->
+        <boldItalic><![CDATA[fonts/THSarabunNew/THSarabunBoldItalic.ttf]]></boldItalic>
+        <!-- Is font is embedded in PDF -->
+        <pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+    </fontFamily>
+</fontFamilies>

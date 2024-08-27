@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SeminarReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0dd29de8-b534-49c8-94da-0c8479b2169d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rep101Adapter"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="agendasDataset" uuid="82b01121-7d5c-4bdb-8bf0-8b9e91d0978f">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BEAN_DATA_ADAPTER"/>
+		<parameter name="agendas" class="java.lang.Object"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="datasource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="date" class="java.time.LocalDate">
+		<fieldDescription><![CDATA[date]]></fieldDescription>
+	</field>
+	<field name="agendas" class="java.lang.Object">
+		<fieldDescription><![CDATA[agendas]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="0" width="554" height="78" uuid="63245efe-c86e-4b84-b70b-ca037925773b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Algerian" size="40"/>
+				</textElement>
+				<text><![CDATA[SEMINAR REPORT]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="3" width="160" height="19" uuid="1ce62436-e17c-41e0-92ea-6553d61d40b8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2243dac8-07d2-40d3-8ed5-a7a1d91a8a93"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Agency FB" size="15"/>
+				</textElement>
+				<text><![CDATA[Date & Agendas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="277" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="5" width="554" height="30" uuid="1a9fc169-e0f5-4315-8c9b-04d84b65ca4d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2243dac8-07d2-40d3-8ed5-a7a1d91a8a93"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Agency FB" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Day  "+$V{REPORT_COUNT}+"  "+java.time.chrono.ThaiBuddhistDate.from($F{date})]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="1" y="40" width="554" height="30" uuid="09d3976d-7582-4400-b53e-2fef70f9ce6f">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="agendasDataset" uuid="11cf7976-8075-41ed-8b25-6fed968bb411">
+						<dataSourceExpression><![CDATA[$P{datasource}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="100" uuid="29b1230c-6b1e-448d-8101-a9c8bb30af97">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:detailCell style="Table_TD" height="30"/>
+					</jr:column>
+					<jr:column width="454" uuid="792e7fc5-2e05-4ba7-8782-8c304efe2f56">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:detailCell style="Table_TD" height="30"/>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement x="60" y="100" width="360" height="130" uuid="2d5aad81-5422-4fb6-b57b-8a8a70ad95d1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bd3c5144-e502-4f51-9965-06e515cbac3b"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{agendas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

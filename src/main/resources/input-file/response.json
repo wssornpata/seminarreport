@@ -1,0 +1,108 @@
+[
+  {
+    "date": "2022-02-25",
+    "agendas": [
+      {
+        "time": "09:00:00",
+        "seminar": "Writing Fast Tests Against Enterprise Rails 60min"
+      },
+      {
+        "time": "10:00:00",
+        "seminar": "Overdoing it in Python 45min"
+      },
+      {
+        "time": "10:45:00",
+        "seminar": "Lua for the Masses 30min"
+      },
+      {
+        "time": "11:15:00",
+        "seminar": "Ruby Errors from Mismatched Gem Versions 45min"
+      },
+      {
+        "time": "12:00:00",
+        "seminar": "Lunch"
+      },
+      {
+        "time": "13:00:00",
+        "seminar": "Ruby on Rails: Why We Should Move On 60min"
+      },
+      {
+        "time": "14:00:00",
+        "seminar": "Common Ruby Errors 45min"
+      },
+      {
+        "time": "14:45:00",
+        "seminar": "Pair Programming vs Noise 45min"
+      },
+      {
+        "time": "15:30:00",
+        "seminar": "Programming in the Boondocks of Seattle 30min"
+      },
+      {
+        "time": "16:00:00",
+        "seminar": "Ruby vs. Clojure for Back-End Development 30min"
+      },
+      {
+        "time": "16:30:00",
+        "seminar": "User Interface CSS in Rails Apps 30min"
+      },
+      {
+        "time": "17:00:00",
+        "seminar": "Networking Event"
+      }
+    ]
+  },
+  {
+    "date": "2022-02-28",
+    "agendas": [
+      {
+        "time": "09:00:00",
+        "seminar": "Writing Fast Tests Against Enterprise Rails 60min"
+      },
+      {
+        "time": "10:00:00",
+        "seminar": "Overdoing it in Python 45min"
+      },
+      {
+        "time": "10:45:00",
+        "seminar": "Lua for the Masses 30min"
+      },
+      {
+        "time": "11:15:00",
+        "seminar": "Ruby Errors from Mismatched Gem Versions 45min"
+      },
+      {
+        "time": "12:00:00",
+        "seminar": "Lunch"
+      },
+      {
+        "time": "13:00:00",
+        "seminar": "Ruby on Rails: Why We Should Move On 60min"
+      },
+      {
+        "time": "14:00:00",
+        "seminar": "Common Ruby Errors 45min"
+      },
+      {
+        "time": "14:45:00",
+        "seminar": "Pair Programming vs Noise 45min"
+      },
+      {
+        "time": "15:30:00",
+        "seminar": "Programming in the Boondocks of Seattle 30min"
+      },
+      {
+        "time": "16:00:00",
+        "seminar": "Ruby vs. Clojure for Back-End Development 30min"
+      },
+      {
+        "time": "16:30:00",
+        "seminar": "User Interface CSS in Rails Apps 30min"
+      },
+      {
+        "time": "17:00:00",
+        "seminar": "Networking Event"
+      }
+    ]
+  }
+]
