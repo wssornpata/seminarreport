@@ -4,7 +4,6 @@ import com.exercise.seminarreport.dto.seminar.response.SeminarResponse;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
