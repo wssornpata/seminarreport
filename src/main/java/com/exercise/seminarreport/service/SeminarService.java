@@ -31,10 +31,10 @@ public class SeminarService {
 
     private String minRegex = "(\\d+)min";
     private String datePattern = "yyyy-MM-dd";
-    private String timePattern = "hh:mma";
+//    private String timePattern = "hh:mma";
 
     private final DateTimeFormatter dateTimeFormatter;
-    private final DateTimeFormatter timeFormatter;
+//    private final DateTimeFormatter timeFormatter;
     private final Pattern minutePattern;
     private Matcher minuteMatcher;
 
@@ -42,7 +42,7 @@ public class SeminarService {
         this.dateService = dateService;
         this.minutePattern = Pattern.compile(minRegex);
         this.dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
-        this.timeFormatter = DateTimeFormatter.ofPattern(timePattern);
+//        this.timeFormatter = DateTimeFormatter.ofPattern(timePattern);
     }
 
     public List<SeminarResponse> getSeminarResponse(MultipartFile file) {
@@ -74,10 +74,10 @@ public class SeminarService {
                 }else {
                     if (isMatchPattern(line))  {
                         if (dateService.isNineAM(seminarDateTime)) {
-                            response.setDay(getDayFormat(seminarDateTime, countDay));
-                            response.setDayDetails(detailResponseList);
+                            response.setDate(seminarDateTime.toLocalDate());
+                            response.setAgendas(detailResponseList);
                             responseList.add(response);
-                            logger.info("Write "+response.getDay()+" "+ seminarDateTime.getDayOfWeek());
+                            logger.info("Write "+response.getDate().toString()+" "+ seminarDateTime.getDayOfWeek());
                             response = new SeminarResponse();
                             if(countDay > 1) {
                                 detailResponseList = new ArrayList<>();
@@ -129,21 +129,21 @@ public class SeminarService {
 
     private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, String line) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTime(localDateTime.format(timeFormatter));
+        response.setTimeDuration(localDateTime.toLocalTime());
         response.setSeminar(line);
         return response;
     }
 
     private SeminarDetailResponse appendLunch() {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTime(LocalTime.of(12, 0).format(timeFormatter));
+        response.setTimeDuration(LocalTime.of(12, 0));
         response.setSeminar(new String("Lunch"));
         return response;
     }
 
     private SeminarDetailResponse appendNetworkingEvent(LocalDateTime localDateTime) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTime(localDateTime.format(timeFormatter));
+        response.setTimeDuration(localDateTime.toLocalTime());
         response.setSeminar(new String("Networking Event"));
         return response;
     }
@@ -177,6 +177,7 @@ public class SeminarService {
 
     public static String changeThaiBuddhistFormat(LocalDateTime dateTime) {
         ThaiBuddhistDate thaiBuddhistDate = ThaiBuddhistDate.from(dateTime);
+        ThaiBuddhistDate.from(dateTime).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return formatter.format(thaiBuddhistDate);
     }

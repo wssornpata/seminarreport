@@ -21,7 +21,7 @@
 		<band height="125" splitType="Stretch">
 			<staticText>
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="167" y="20" width="220" height="85" forecolor="#050000" uuid="e7c773ba-f9c5-4736-939c-4aeaa44008b7"/>
-				<textElement markup="">
+				<textElement markup="none">
 					<font fontName="Arial" size="24"/>
 				</textElement>
 				<text><![CDATA[Hello World]]></text>

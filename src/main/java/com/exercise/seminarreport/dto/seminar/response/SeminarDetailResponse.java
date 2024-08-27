@@ -2,8 +2,10 @@ package com.exercise.seminarreport.dto.seminar.response;
 
 import lombok.Data;
 
+import java.time.LocalTime;
+
 @Data
 public class SeminarDetailResponse {
-    private String time;
+    private LocalTime timeDuration;
     private String seminar;
 }

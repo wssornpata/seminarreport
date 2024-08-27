@@ -28,12 +28,21 @@ public class SeminarController {
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             var response = seminarService.getSeminarResponse(file);
-//            byte[] report = reportService.generateReport(response);
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report.pdf")
-//                    .contentType(MediaType.APPLICATION_PDF)
-//                    .body(report);
             return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Error e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/exportPdf", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> exportToPdf(@RequestParam("file") MultipartFile file) {
+        try {
+            var response = seminarService.getSeminarResponse(file);
+            byte[] report = reportService.exportToPdf(response, "SeminarReport.jrxml");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Seminar.pdf")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(report);
         } catch (Error e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
