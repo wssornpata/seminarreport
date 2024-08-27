@@ -2,6 +2,7 @@ package com.exercise.seminarreport.controller;
 
 import com.exercise.seminarreport.service.ReportService;
 import com.exercise.seminarreport.service.SeminarService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping("/seminar")
 public class SeminarController {
@@ -30,6 +32,7 @@ public class SeminarController {
             var response = seminarService.getSeminarResponse(file);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Error e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
