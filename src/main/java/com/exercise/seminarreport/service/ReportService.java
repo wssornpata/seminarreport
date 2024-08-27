@@ -9,9 +9,7 @@ import net.sf.jasperreports.engine.data.JsonDataSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +25,13 @@ public class ReportService {
         try {
             file = ResourceUtils.getFile("classpath:jasper-template/"+filename);
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-
-//            String json = gson.toJson(seminarResponseList);
-            JRBeanCollectionDataSource seminarBeanDataSource = new JRBeanCollectionDataSource(seminarResponseList);
+            String json = gson.toJson(seminarResponseList);
+            InputStream jsonInputStream = new ByteArrayInputStream(json.getBytes());
+            JsonDataSource jsonDataSource = new JsonDataSource(jsonInputStream);
             Map dataSource = new HashMap<>();
-            dataSource.put("datasource",seminarBeanDataSource);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, dataSource, seminarBeanDataSource  );
-            log.info(dataSource.toString());
-
+            dataSource.put("datasource",jsonDataSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, dataSource, jsonDataSource);
+            log.info(jsonDataSource.toString());
             JasperExportManager.exportReportToPdfStream(jasperPrint, out);
             return out.toByteArray();
         } catch (FileNotFoundException | JRException e) {
