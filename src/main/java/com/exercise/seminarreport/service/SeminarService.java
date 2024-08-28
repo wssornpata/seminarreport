@@ -50,8 +50,8 @@ public class SeminarService {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))){
             log.info("Read File.");
             LocalDateTime seminarDateTime = null;
-            SeminarResponse response = new SeminarResponse();
-            List<SeminarDetailResponse> detailResponseList = new ArrayList<>();
+            SeminarResponse response;
+            List<SeminarDetailResponse> detailResponseList;
             String line;
             int countDay = 0;
             isRunning = true;
