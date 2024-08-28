@@ -88,11 +88,11 @@
 					<datasetRun subDataset="AgendaDataset" uuid="5da9524e-72d8-4603-a377-710ed11b7fd5">
 						<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("agendas")]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="80" uuid="0f9971c4-534f-4655-afca-f7439b2f660d">
+					<jr:column width="110" uuid="0f9971c4-534f-4655-afca-f7439b2f660d">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="80" height="20" uuid="ed5764af-139d-46f3-9fd0-32c42828b90e"/>
+								<reportElement x="0" y="0" width="110" height="20" uuid="ed5764af-139d-46f3-9fd0-32c42828b90e"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -107,7 +107,7 @@
 								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="80" height="20" uuid="e8a19195-c1e5-4da4-84f7-ecb57b6127f2"/>
+								<reportElement x="0" y="0" width="110" height="20" uuid="e8a19195-c1e5-4da4-84f7-ecb57b6127f2"/>
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -115,15 +115,15 @@
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{timeDuration}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("hh:mma").format(java.time.LocalTime.parse($F{timeDuration}, java.time.format.DateTimeFormatter.ofPattern("HH:mm")))]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="350" uuid="23df53ba-412d-4f24-aaac-53d7000c7e5e">
+					<jr:column width="320" uuid="23df53ba-412d-4f24-aaac-53d7000c7e5e">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="350" height="20" uuid="d9c011af-6788-41df-9885-d8dd76b239cb"/>
+								<reportElement x="0" y="0" width="320" height="20" uuid="d9c011af-6788-41df-9885-d8dd76b239cb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -132,7 +132,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField>
-								<reportElement x="0" y="0" width="350" height="20" uuid="7f0ee7a6-db7f-40e2-b693-5cbe4973c172"/>
+								<reportElement x="0" y="0" width="320" height="20" uuid="7f0ee7a6-db7f-40e2-b693-5cbe4973c172"/>
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
