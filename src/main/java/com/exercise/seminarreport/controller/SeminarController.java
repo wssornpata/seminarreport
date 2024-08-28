@@ -7,10 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -37,7 +34,7 @@ public class SeminarController {
         }
     }
 
-    @PostMapping(value = "/exportPdf", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/uploadFileAndExport", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> exportToPdf(@RequestParam("file") MultipartFile file) {
         try {
             var response = seminarService.getSeminarResponse(file);
@@ -50,4 +47,18 @@ public class SeminarController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @PostMapping(value = "/exportPdf", produces = "application/json")
+    public ResponseEntity<?> exportToPdf(@RequestBody() String jsonInput) {
+        try {
+            byte[] report = reportService.exportToPdf(jsonInput, "SeminarReport.jrxml");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Seminar.pdf")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(report);
+        } catch (Error e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }

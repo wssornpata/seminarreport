@@ -17,15 +17,34 @@ import java.util.Map;
 @Service
 public class ReportService {
 
-    public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String filename) {
+    public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String jasperFilename) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Gson gson = new Gson();
         File file;
         try {
-            file = ResourceUtils.getFile("classpath:jasper-template/"+filename);
+            file = ResourceUtils.getFile("classpath:jasper-template/"+jasperFilename);
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
             String json = gson.toJson(seminarResponseList);
             InputStream jsonInputStream = new ByteArrayInputStream(json.getBytes());
+            JsonDataSource jsonDataSource = new JsonDataSource(jsonInputStream);
+            Map dataSource = new HashMap<>();
+            dataSource.put("datasource",jsonDataSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, dataSource, jsonDataSource);
+            log.info(jsonDataSource.toString());
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+            return out.toByteArray();
+        } catch (FileNotFoundException | JRException e) {
+            throw new Error("Report generation failed: " + e.getMessage());
+        }
+    }
+
+    public byte[] exportToPdf(String jsonInput, String jasperFilename) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        File file;
+        try {
+            file = ResourceUtils.getFile("classpath:jasper-template/"+jasperFilename);
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            InputStream jsonInputStream = new ByteArrayInputStream(jsonInput.getBytes());
             JsonDataSource jsonDataSource = new JsonDataSource(jsonInputStream);
             Map dataSource = new HashMap<>();
             dataSource.put("datasource",jsonDataSource);
