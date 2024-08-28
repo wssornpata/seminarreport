@@ -12,12 +12,4 @@ import java.util.List;
 public class SeminarResponse {
     private String date;
     private List<SeminarDetailResponse> agendas;
-
-    public String getDate() {
-        return date;
-    }
-
-    public List<SeminarDetailResponse> getAgendas() {
-        return agendas;
-    }
 }

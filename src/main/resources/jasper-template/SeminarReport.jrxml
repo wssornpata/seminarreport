@@ -37,6 +37,7 @@
 		</queryString>
 		<field name="timeDuration" class="java.lang.String"/>
 		<field name="seminar" class="java.lang.String"/>
+		<field name="duration" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="datasource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<queryString language="json">
@@ -77,7 +78,7 @@
 	<detail>
 		<band height="419" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="40" width="554" height="20" uuid="ef35ed48-8cdc-4933-82c9-095efa062028">
+				<reportElement x="0" y="30" width="554" height="40" uuid="ef35ed48-8cdc-4933-82c9-095efa062028">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -87,8 +88,17 @@
 					<datasetRun subDataset="AgendaDataset" uuid="5da9524e-72d8-4603-a377-710ed11b7fd5">
 						<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("agendas")]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="70" uuid="0f9971c4-534f-4655-afca-f7439b2f660d">
+					<jr:column width="80" uuid="0f9971c4-534f-4655-afca-f7439b2f660d">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="20" uuid="ed5764af-139d-46f3-9fd0-32c42828b90e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Time]]></text>
+							</staticText>
+						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<box>
 								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -97,17 +107,32 @@
 								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="70" height="20" uuid="e8a19195-c1e5-4da4-84f7-ecb57b6127f2"/>
+								<reportElement x="0" y="0" width="80" height="20" uuid="e8a19195-c1e5-4da4-84f7-ecb57b6127f2"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{timeDuration}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="484" uuid="23df53ba-412d-4f24-aaac-53d7000c7e5e">
+					<jr:column width="390" uuid="23df53ba-412d-4f24-aaac-53d7000c7e5e">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="390" height="20" uuid="d9c011af-6788-41df-9885-d8dd76b239cb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Agenda]]></text>
+							</staticText>
+						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField>
-								<reportElement x="0" y="0" width="484" height="20" uuid="7f0ee7a6-db7f-40e2-b693-5cbe4973c172"/>
+								<reportElement x="0" y="0" width="390" height="20" uuid="7f0ee7a6-db7f-40e2-b693-5cbe4973c172"/>
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -119,13 +144,32 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
+					<jr:column width="84" uuid="b7b07ef5-78ca-4ffb-abba-2d0f4b2bcda8">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="84" height="20" uuid="7e525e1f-48e3-4061-a032-0ec0598f80e3"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Duration]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="84" height="20" uuid="ae1fcd23-79fc-4855-984c-53751ffb32ac"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{duration}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
 				</jr:table>
 			</componentElement>
 			<textField>
-				<reportElement x="0" y="11" width="554" height="16" uuid="b7569e70-059b-446c-b9ca-867c13a044a3">
+				<reportElement x="0" y="13" width="554" height="16" uuid="b7569e70-059b-446c-b9ca-867c13a044a3">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="153efaa8-d795-4845-b1a3-58e513e0b593"/>
 				</reportElement>
-				<textFieldExpression><![CDATA["Day  "+$V{REPORT_COUNT}+"  "+java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy").format(java.time.chrono.ThaiBuddhistDate.from(java.time.LocalDate.parse($F{date})))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Day " + $V{REPORT_COUNT} + ": " + java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy").format(java.time.LocalDate.parse($F{date}))]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

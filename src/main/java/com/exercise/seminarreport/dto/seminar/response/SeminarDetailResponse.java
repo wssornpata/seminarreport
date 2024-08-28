@@ -10,12 +10,5 @@ import lombok.NoArgsConstructor;
 public class SeminarDetailResponse {
     private String timeDuration;
     private String seminar;
-
-    public String getSeminar() {
-        return seminar;
-    }
-
-    public String getTimeDuration() {
-        return timeDuration;
-    }
+    private String duration;
 }

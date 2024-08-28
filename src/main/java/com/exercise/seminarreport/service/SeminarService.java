@@ -83,24 +83,25 @@ public class SeminarService {
 
                         line = line.trim();
                         int minute = Integer.parseInt(minuteMatcher.group(1));
+                        line = line.replaceAll(minRegex, "");
                         LocalDateTime newTime = seminarDateTime.plusMinutes(minute);
 
                         if (dateService.isLunch(newTime)) {
-                            detailResponseList.add(appendSeminarDetail(seminarDateTime, line));
+                            detailResponseList.add(appendSeminarDetail(seminarDateTime, minute, line));
                             detailResponseList.add(appendLunch());
                             seminarDateTime = dateService.setToAfternoon(seminarDateTime);
                         } else if (dateService.isNetworkingEvent(newTime)) {
                             if (dateService.isAfterFivePM(newTime)) {
                                 detailResponseList.add(appendNetworkingEvent(seminarDateTime));
                             } else {
-                                detailResponseList.add(appendSeminarDetail(seminarDateTime, line));
+                                detailResponseList.add(appendSeminarDetail(seminarDateTime, minute, line));
                                 detailResponseList.add(appendNetworkingEvent(newTime));
                             }
                             seminarDateTime = dateService.setToNextDay(seminarDateTime);
                             //check weekend
                             seminarDateTime = dateService.checkWeekend(seminarDateTime);
                         } else {
-                            detailResponseList.add(appendSeminarDetail(seminarDateTime, line));
+                            detailResponseList.add(appendSeminarDetail(seminarDateTime, minute, line));
                             seminarDateTime = newTime;
                         }
                     }
@@ -123,10 +124,11 @@ public class SeminarService {
         return day.toString();
     }
 
-    private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, String line) {
+    private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, int minute, String line) {
         SeminarDetailResponse response = new SeminarDetailResponse();
         response.setTimeDuration(localDateTime.toLocalTime().format(timeFormatter).toString());
         response.setSeminar(line);
+        response.setDuration(String.valueOf(minute));
         return response;
     }
 
@@ -134,6 +136,7 @@ public class SeminarService {
         SeminarDetailResponse response = new SeminarDetailResponse();
         response.setTimeDuration(LocalTime.of(12, 0).format(timeFormatter).toString());
         response.setSeminar(new String("Lunch"));
+        response.setDuration(String.valueOf(60));
         return response;
     }
 
@@ -141,6 +144,7 @@ public class SeminarService {
         SeminarDetailResponse response = new SeminarDetailResponse();
         response.setTimeDuration(localDateTime.toLocalTime().format(timeFormatter).toString());
         response.setSeminar(new String("Networking Event"));
+        response.setDuration(String.valueOf(60));
         return response;
     }
 }
