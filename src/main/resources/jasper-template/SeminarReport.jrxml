@@ -119,11 +119,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="390" uuid="23df53ba-412d-4f24-aaac-53d7000c7e5e">
+					<jr:column width="350" uuid="23df53ba-412d-4f24-aaac-53d7000c7e5e">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="390" height="20" uuid="d9c011af-6788-41df-9885-d8dd76b239cb"/>
+								<reportElement x="0" y="0" width="350" height="20" uuid="d9c011af-6788-41df-9885-d8dd76b239cb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -132,7 +132,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField>
-								<reportElement x="0" y="0" width="390" height="20" uuid="7f0ee7a6-db7f-40e2-b693-5cbe4973c172"/>
+								<reportElement x="0" y="0" width="350" height="20" uuid="7f0ee7a6-db7f-40e2-b693-5cbe4973c172"/>
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -144,20 +144,20 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="84" uuid="b7b07ef5-78ca-4ffb-abba-2d0f4b2bcda8">
+					<jr:column width="124" uuid="b7b07ef5-78ca-4ffb-abba-2d0f4b2bcda8">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="84" height="20" uuid="7e525e1f-48e3-4061-a032-0ec0598f80e3"/>
+								<reportElement x="0" y="0" width="124" height="20" uuid="7e525e1f-48e3-4061-a032-0ec0598f80e3"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
-								<text><![CDATA[Duration]]></text>
+								<text><![CDATA[Duration (Minutes)]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField>
-								<reportElement x="0" y="0" width="84" height="20" uuid="ae1fcd23-79fc-4855-984c-53751ffb32ac"/>
+								<reportElement x="0" y="0" width="124" height="20" uuid="ae1fcd23-79fc-4855-984c-53751ffb32ac"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{duration}]]></textFieldExpression>
 							</textField>

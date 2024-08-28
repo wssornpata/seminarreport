@@ -38,7 +38,6 @@ public class ReportService {
             Map dataSource = new HashMap<>();
             dataSource.put("datasource",jsonDataSource);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, dataSource, jsonDataSource);
-            log.info(jsonDataSource.toString());
             JasperExportManager.exportReportToPdfStream(jasperPrint, out);
             return out.toByteArray();
         } catch (FileNotFoundException | JRException e) {

@@ -27,10 +27,9 @@ public class SeminarService {
 
     private String minRegex = "(\\d+)min";
     private String datePattern = "yyyy-MM-dd";
-    private String timePattern = "hh:mma";
+    private boolean isRunning = true;
 
     private final DateTimeFormatter dateTimeFormatter;
-    private final DateTimeFormatter timeFormatter;
     private final Pattern minutePattern;
     private Matcher minuteMatcher;
 
@@ -38,7 +37,6 @@ public class SeminarService {
         this.dateService = dateService;
         this.minutePattern = Pattern.compile(minRegex);
         this.dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
-        this.timeFormatter = DateTimeFormatter.ofPattern(timePattern);
     }
 
     public List<SeminarResponse> getSeminarResponse(MultipartFile file) {
@@ -56,8 +54,10 @@ public class SeminarService {
             List<SeminarDetailResponse> detailResponseList = new ArrayList<>();
             String line;
             int countDay = 0;
-            while ((line = reader.readLine()) != null) {
+            isRunning = true;
+            while (isRunning) {
                 if (countDay == 0) {
+                    line = reader.readLine();
                     String date = line;
                     try {
                         LocalDate parsedDate = LocalDate.parse(date, dateTimeFormatter);
@@ -65,24 +65,22 @@ public class SeminarService {
                         countDay++;
                         log.info("Get Start Seminar Date From File.");
                     } catch (DateTimeParseException e) {
+                        isRunning = false;
                         throw new Error("Seminar service: Invalid date format.");
                     }
-                }else {
-                    if (isMatchPattern(line))  {
-                        if (dateService.isNineAM(seminarDateTime)) {
-                            response.setDate(seminarDateTime.toLocalDate().toString());
-                            response.setAgendas(detailResponseList);
-                            responseList.add(response);
-                            log.info("Write "+response.getDate().toString()+" "+ seminarDateTime.getDayOfWeek());
-                            response = new SeminarResponse();
-                            if(countDay > 1) {
-                                detailResponseList = new ArrayList<>();
+                } else {
+                    response = new SeminarResponse();
+                    detailResponseList = new ArrayList<>();
+                    response.setDate(seminarDateTime.toLocalDate().toString());
+                    int minute = 0;
+                    while ((line = reader.readLine()) != null) {
+                        if (isMatchPattern(line)) {
+                            if (dateService.isNineAM(seminarDateTime)) {
+                                countDay++;
                             }
-                            countDay++;
                         }
-
                         line = line.trim();
-                        int minute = Integer.parseInt(minuteMatcher.group(1));
+                        minute = Integer.parseInt(minuteMatcher.group(1));
                         line = line.replaceAll(minRegex, "");
                         LocalDateTime newTime = seminarDateTime.plusMinutes(minute);
 
@@ -100,10 +98,24 @@ public class SeminarService {
                             seminarDateTime = dateService.setToNextDay(seminarDateTime);
                             //check weekend
                             seminarDateTime = dateService.checkWeekend(seminarDateTime);
+                            break;
                         } else {
                             detailResponseList.add(appendSeminarDetail(seminarDateTime, minute, line));
                             seminarDateTime = newTime;
                         }
+                    }
+
+                    if(line == null) {
+                        if (seminarDateTime.getHour()>=16 && seminarDateTime.getMinute() >= 0){
+                            detailResponseList.add(appendNetworkingEvent(seminarDateTime));
+                        }
+                        isRunning = false;
+                    }
+
+                    if(detailResponseList.size()>0) {
+                        response.setAgendas(detailResponseList);
+                        responseList.add(response);
+                        log.info("Add\t"+response.getDate());
                     }
                 }
             }
@@ -114,8 +126,12 @@ public class SeminarService {
     }
 
     public boolean isMatchPattern(String line) {
-        minuteMatcher = minutePattern.matcher(line);
-        return minuteMatcher.find();
+        if(line != null) {
+            minuteMatcher = minutePattern.matcher(line);
+            return minuteMatcher.find();
+        }else {
+            return false;
+        }
     }
 
     private String getDayFormat(LocalDateTime localDatetime, int countDay) {
@@ -126,7 +142,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, int minute, String line) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTimeDuration(localDateTime.toLocalTime().format(timeFormatter).toString());
+        response.setTimeDuration(localDateTime.toLocalTime().toString());
         response.setSeminar(line);
         response.setDuration(String.valueOf(minute));
         return response;
@@ -134,7 +150,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendLunch() {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTimeDuration(LocalTime.of(12, 0).format(timeFormatter).toString());
+        response.setTimeDuration(LocalTime.of(12, 0).toString());
         response.setSeminar(new String("Lunch"));
         response.setDuration(String.valueOf(60));
         return response;
@@ -142,7 +158,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendNetworkingEvent(LocalDateTime localDateTime) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTimeDuration(localDateTime.toLocalTime().format(timeFormatter).toString());
+        response.setTimeDuration(localDateTime.toLocalTime().toString());
         response.setSeminar(new String("Networking Event"));
         response.setDuration(String.valueOf(60));
         return response;

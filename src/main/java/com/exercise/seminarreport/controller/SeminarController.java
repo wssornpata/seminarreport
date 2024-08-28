@@ -27,6 +27,7 @@ public class SeminarController {
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             var response = seminarService.getSeminarResponse(file);
+            log.info("Write succeeded");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Error e) {
             log.error(e.getMessage());
@@ -39,6 +40,7 @@ public class SeminarController {
         try {
             var response = seminarService.getSeminarResponse(file);
             byte[] report = reportService.exportToPdf(response, "SeminarReport.jrxml");
+            log.info("Write succeeded");
             return ResponseEntity.status(HttpStatus.OK)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Seminar.pdf")
                     .contentType(MediaType.APPLICATION_PDF)
@@ -52,6 +54,7 @@ public class SeminarController {
     public ResponseEntity<?> exportToPdf(@RequestBody() String jsonInput) {
         try {
             byte[] report = reportService.exportToPdf(jsonInput, "SeminarReport.jrxml");
+            log.info("Write succeeded");
             return ResponseEntity.status(HttpStatus.OK)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Seminar.pdf")
                     .contentType(MediaType.APPLICATION_PDF)

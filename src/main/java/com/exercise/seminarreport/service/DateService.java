@@ -1,15 +1,15 @@
 package com.exercise.seminarreport.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.chrono.ThaiBuddhistDate;
 import java.time.format.DateTimeFormatter;
 
-@Slf4j
 @Service
 public class DateService {
     public DateService() {}
@@ -20,7 +20,7 @@ public class DateService {
     }
 
     public boolean isLunch(LocalDateTime newTime) {
-        LocalTime startLunch = LocalTime.of(12, 0);
+        LocalTime startLunch = LocalTime.of(11, 59);
         LocalTime endLunch = LocalTime.of(13, 0);
         return newTime.toLocalTime().isAfter(startLunch) && newTime.toLocalTime().isBefore(endLunch);
     }
@@ -29,7 +29,6 @@ public class DateService {
         LocalTime fivePM = LocalTime.of(17, 0);
         return localDateTime.toLocalTime().equals(fivePM);
     }
-
     public LocalDateTime setToAfternoon(LocalDateTime seminarDateTime) {
         return  seminarDateTime.withHour(13).withMinute(0);
     }
