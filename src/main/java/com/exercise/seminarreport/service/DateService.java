@@ -8,10 +8,11 @@ import java.time.LocalTime;
 
 @Service
 public class DateService {
+    private final LocalTime nineAM = LocalTime.of(9, 0);
+
     public DateService() {}
 
     public boolean isNineAM(LocalDateTime localDateTime) {
-        LocalTime nineAM = LocalTime.of(9, 0);
         return localDateTime.toLocalTime().equals(nineAM);
     }
 

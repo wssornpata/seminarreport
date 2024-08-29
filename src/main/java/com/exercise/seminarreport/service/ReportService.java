@@ -22,7 +22,7 @@ public class ReportService {
     final TypeAdapter<JsonElement> strictAdapter = new Gson().getAdapter(JsonElement.class);
 
     public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String jasperFilename) {
-        Gson gson = new Gson();
+        Gson gson = new Gson();//ObjectMapper
         String json = gson.toJson(seminarResponseList);
         return getPdf(json, jasperFilename);
     }
@@ -42,7 +42,7 @@ public class ReportService {
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
             InputStream jsonInputStream = new ByteArrayInputStream(json.getBytes());
             JsonDataSource jsonDataSource = new JsonDataSource(jsonInputStream);
-            Map dataSource = new HashMap<>();
+            Map<String, Object> dataSource = new HashMap<>();
             dataSource.put("datasource",jsonDataSource);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, dataSource, jsonDataSource);
             JasperExportManager.exportReportToPdfStream(jasperPrint, out);
