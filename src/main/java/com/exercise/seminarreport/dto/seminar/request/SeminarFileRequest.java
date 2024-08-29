@@ -1,10 +1,9 @@
 package com.exercise.seminarreport.dto.seminar.request;
 
 import lombok.Data;
-
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class SeminarFileRequest {
-    private File file;
+    private MultipartFile file;
 }

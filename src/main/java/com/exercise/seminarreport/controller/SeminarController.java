@@ -42,7 +42,7 @@ public class SeminarController {
             byte[] report = reportService.exportToPdf(response, "SeminarReport.jrxml");
             log.info("Write succeeded");
             return ResponseEntity.status(HttpStatus.OK)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Seminar.pdf")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment filename=Seminar.pdf")
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(report);
         } catch (Error e) {
