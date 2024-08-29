@@ -18,7 +18,12 @@ public class DateService {
     public boolean isLunch(LocalDateTime localDateTime) {
         LocalTime startLunch = LocalTime.of(12, 0);
         LocalTime endLunch = LocalTime.of(13, 0);
-        return (localDateTime.toLocalTime().isAfter(startLunch) || localDateTime.toLocalTime().equals(startLunch)) && localDateTime.toLocalTime().isBefore(endLunch);
+        return (localDateTime.toLocalTime().isAfter(startLunch) || isEqualLunch(localDateTime)) && localDateTime.toLocalTime().isBefore(endLunch);
+    }
+
+    public boolean isEqualLunch(LocalDateTime localDateTime) {
+        LocalTime startLunch = LocalTime.of(12, 0);
+        return (localDateTime.toLocalTime().equals(startLunch));
     }
 
     boolean isNetworkingEvent(LocalDateTime localDateTime) {

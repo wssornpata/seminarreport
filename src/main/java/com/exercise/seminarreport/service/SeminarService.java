@@ -85,9 +85,16 @@ public class SeminarService {
                         LocalDateTime newTime = seminarDateTime.plusMinutes(minute);
 
                         if (dateService.isLunch(newTime)) {
-                            detailResponseList.add(appendSeminarDetail(seminarDateTime, minute, line));
-                            detailResponseList.add(appendLunch());
-                            seminarDateTime = dateService.setToAfternoon(seminarDateTime);
+                            if(dateService.isEqualLunch(newTime)){
+                                detailResponseList.add(appendSeminarDetail(seminarDateTime, minute, line));
+                                detailResponseList.add(appendLunch());
+                                seminarDateTime = dateService.setToAfternoon(seminarDateTime);
+                            }else {
+                                detailResponseList.add(appendLunch());
+                                seminarDateTime = dateService.setToAfternoon(seminarDateTime);
+                                detailResponseList.add(appendSeminarDetail(seminarDateTime, minute, line));
+                                seminarDateTime = seminarDateTime.plusMinutes(minute);
+                            }
                         } else if (dateService.isNetworkingEvent(newTime)) {
                             if (dateService.isAfterFivePM(newTime)) {
                                 detailResponseList.add(appendNetworkingEvent(seminarDateTime));
