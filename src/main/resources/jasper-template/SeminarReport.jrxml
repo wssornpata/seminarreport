@@ -51,19 +51,6 @@
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="40" splitType="Stretch">
-			<staticText>
-				<reportElement x="1" y="0" width="554" height="39" uuid="eb57ea66-8d83-4872-8b66-b2afeb7e1481">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d3262992-6b24-40fb-b51c-3425d38d3aa6"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="24"/>
-				</textElement>
-				<text><![CDATA[Seminar Reports]]></text>
-			</staticText>
-		</band>
-	</title>
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
