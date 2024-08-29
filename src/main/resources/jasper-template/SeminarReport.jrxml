@@ -35,7 +35,9 @@
 		<queryString language="JSON">
 			<![CDATA[]]>
 		</queryString>
-		<field name="timeDuration" class="java.lang.String"/>
+		<field name="timeDuration" class="java.lang.String">
+			<fieldDescription><![CDATA[time]]></fieldDescription>
+		</field>
 		<field name="seminar" class="java.lang.String"/>
 		<field name="duration" class="java.lang.String"/>
 	</subDataset>

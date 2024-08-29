@@ -142,7 +142,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, int minute, String line) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTimeDuration(localDateTime.toLocalTime().toString());
+        response.setTime(localDateTime.toLocalTime().toString());
         response.setSeminar(line);
         response.setDuration(String.valueOf(minute));
         return response;
@@ -150,7 +150,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendLunch() {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTimeDuration(LocalTime.of(12, 0).toString());
+        response.setTime(LocalTime.of(12, 0).toString());
         response.setSeminar(new String("Lunch"));
         response.setDuration(String.valueOf(60));
         return response;
@@ -158,7 +158,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendNetworkingEvent(LocalDateTime localDateTime) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTimeDuration(localDateTime.toLocalTime().toString());
+        response.setTime(localDateTime.toLocalTime().toString());
         response.setSeminar(new String("Networking Event"));
         response.setDuration(String.valueOf(60));
         return response;

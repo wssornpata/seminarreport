@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeminarDetailResponse {
-    private String timeDuration;
+    private String time;
     private String seminar;
     private String duration;
 }
