@@ -96,7 +96,6 @@ public class SeminarService {
                                 detailResponseList.add(appendNetworkingEvent(newTime));
                             }
                             seminarDateTime = dateService.setToNextDay(seminarDateTime);
-                            //check weekend
                             seminarDateTime = dateService.checkWeekend(seminarDateTime);
                             break;
                         } else {
@@ -106,7 +105,7 @@ public class SeminarService {
                     }
 
                     if(line == null) {
-                        if (seminarDateTime.getHour()>=16 && seminarDateTime.getMinute() >= 0){
+                        if (dateService.checkLastNetworkingEvent(seminarDateTime)) {
                             detailResponseList.add(appendNetworkingEvent(seminarDateTime));
                         }
                         isRunning = false;
@@ -132,12 +131,6 @@ public class SeminarService {
         }else {
             return false;
         }
-    }
-
-    private String getDayFormat(LocalDateTime localDatetime, int countDay) {
-        StringBuilder day = new StringBuilder();
-        day.append("Day " + countDay + " " + dateService.changeThaiBuddhistFormat(localDatetime));
-        return day.toString();
     }
 
     private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, int minute, String line) {

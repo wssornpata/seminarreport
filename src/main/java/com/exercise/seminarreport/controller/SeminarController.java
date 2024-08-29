@@ -1,5 +1,6 @@
 package com.exercise.seminarreport.controller;
 
+import com.exercise.seminarreport.dto.seminar.request.SeminarFileRequest;
 import com.exercise.seminarreport.service.ReportService;
 import com.exercise.seminarreport.service.SeminarService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/seminar")
 public class SeminarController {
 
+    private String jasperPath = "SeminarReport.jrxml";
+    private String fileName = "Seminar.pdf";
+
     private final SeminarService seminarService;
     private final ReportService reportService;
 
@@ -23,11 +27,11 @@ public class SeminarController {
         this.reportService = reportService;
     }
 
-    @PostMapping(value = "/upload", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "/uploadFile", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadFile(@ModelAttribute SeminarFileRequest seminarFileRequest) {
         try {
+            MultipartFile file = seminarFileRequest.getFile();
             var response = seminarService.getSeminarResponse(file);
-            log.info("Write succeeded");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Error e) {
             log.error(e.getMessage());
@@ -35,14 +39,14 @@ public class SeminarController {
         }
     }
 
-    @PostMapping(value = "/uploadFileAndExport", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> exportToPdf(@RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "/uploadFileAndExport", produces = MediaType.APPLICATION_PDF_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadFileAndExport(@ModelAttribute SeminarFileRequest seminarFileRequest) {
         try {
+            MultipartFile file = seminarFileRequest.getFile();
             var response = seminarService.getSeminarResponse(file);
-            byte[] report = reportService.exportToPdf(response, "SeminarReport.jrxml");
-            log.info("Write succeeded");
+            byte[] report = reportService.exportToPdf(response, jasperPath);
             return ResponseEntity.status(HttpStatus.OK)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment filename=Seminar.pdf")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment filename="+fileName)
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(report);
         } catch (Error e) {
@@ -50,13 +54,12 @@ public class SeminarController {
         }
     }
 
-    @PostMapping(value = "/exportPdf", produces = "application/json")
-    public ResponseEntity<?> exportToPdf(@RequestBody() String jsonInput) {
+    @PostMapping(value = "/exportPdf", produces = MediaType.APPLICATION_PDF_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> exportPdf(@RequestBody String jsonInput) {
         try {
-            byte[] report = reportService.exportToPdf(jsonInput, "SeminarReport.jrxml");
-            log.info("Write succeeded");
+            byte[] report = reportService.exportToPdf(jsonInput, jasperPath);
             return ResponseEntity.status(HttpStatus.OK)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Seminar.pdf")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName)
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(report);
         } catch (Error e) {
