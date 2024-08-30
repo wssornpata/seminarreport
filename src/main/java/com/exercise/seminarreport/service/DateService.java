@@ -8,47 +8,46 @@ import java.time.LocalTime;
 
 @Service
 public class DateService {
-    private final LocalTime nineAM = LocalTime.of(9, 0);
+    private static final LocalTime nineAM = LocalTime.of(9, 0);
+    private static final LocalTime twelveAM = LocalTime.of(12, 0);
+    private static final LocalTime onePM = LocalTime.of(13, 0);
+    private static final LocalTime fourPM = LocalTime.of(16, 0);
+    private static final LocalTime fivePM = LocalTime.of(17, 0);
 
     public DateService() {}
 
-    public boolean isNineAM(LocalDateTime localDateTime) {
+    public static boolean isNineAM(LocalDateTime localDateTime) {
         return localDateTime.toLocalTime().equals(nineAM);
     }
 
-    public boolean isLunch(LocalDateTime localDateTime) {
-        LocalTime startLunch = LocalTime.of(12, 0);
-        LocalTime endLunch = LocalTime.of(13, 0);
-        return (localDateTime.toLocalTime().isAfter(startLunch) || isEqualLunch(localDateTime)) && localDateTime.toLocalTime().isBefore(endLunch);
+    public static boolean isLunch(LocalDateTime localDateTime) {
+        return (localDateTime.toLocalTime().isAfter(twelveAM) || isEqualLunch(localDateTime)) && localDateTime.toLocalTime().isBefore(onePM);
     }
 
-    public boolean isEqualLunch(LocalDateTime localDateTime) {
-        LocalTime startLunch = LocalTime.of(12, 0);
-        return (localDateTime.toLocalTime().equals(startLunch));
+    public static boolean isEqualLunch(LocalDateTime localDateTime) {
+        return (localDateTime.toLocalTime().equals(twelveAM));
     }
 
-    boolean isNetworkingEvent(LocalDateTime localDateTime) {
+    public static boolean isNetworkingEvent(LocalDateTime localDateTime) {
         return (localDateTime.getHour() > 16);
     }
 
-    public boolean checkLastNetworkingEvent(LocalDateTime localDateTime) {
-        LocalTime lastNetworkingEvent = LocalTime.of(16, 0);
-        return (localDateTime.toLocalTime().isAfter(lastNetworkingEvent)) || (localDateTime.toLocalTime().equals(lastNetworkingEvent));
+    public static boolean checkLastNetworkingEvent(LocalDateTime localDateTime) {
+        return (localDateTime.toLocalTime().isAfter(fourPM)) || (localDateTime.toLocalTime().equals(fourPM));
     }
 
-    public boolean isAfterFivePM(LocalDateTime localDateTime) {
-        LocalTime fivePM = LocalTime.of(17, 0);
+    public static boolean isAfterFivePM(LocalDateTime localDateTime) {
         return localDateTime.toLocalTime().isAfter(fivePM);
     }
-    public LocalDateTime setToAfternoon(LocalDateTime localDateTime) {
-        return  localDateTime.withHour(13).withMinute(0);
+    public static LocalDateTime setToAfternoon(LocalDateTime localDateTime) {
+        return  localDateTime.with(onePM);
     }
 
-    public LocalDateTime setToNextDay(LocalDateTime localDateTime) {
-        return localDateTime.plusDays(1).withHour(9).withMinute(0);
+    public static LocalDateTime setToNextDay(LocalDateTime localDateTime) {
+        return localDateTime.plusDays(1).with(nineAM);
     }
 
-    public  LocalDateTime checkWeekend(LocalDateTime localDateTime) {
+    public static  LocalDateTime checkWeekend(LocalDateTime localDateTime) {
         while (localDateTime.getDayOfWeek() == DayOfWeek.SATURDAY || localDateTime.getDayOfWeek() == DayOfWeek.SUNDAY) {
             localDateTime = localDateTime.plusDays(1);
         }

@@ -1,6 +1,8 @@
 package com.exercise.seminarreport.service;
 
 import com.exercise.seminarreport.dto.seminar.response.SeminarResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
@@ -20,11 +22,16 @@ import java.util.Map;
 @Service
 public class ReportService {
     final TypeAdapter<JsonElement> strictAdapter = new Gson().getAdapter(JsonElement.class);
+    final ObjectMapper objectMapper = new ObjectMapper();
 
     public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String jasperFilename) {
-        Gson gson = new Gson();//ObjectMapper
-        String json = gson.toJson(seminarResponseList);
-        return getPdf(json, jasperFilename);
+        String json;
+        try {
+            json = objectMapper.writeValueAsString(seminarResponseList);
+            return getPdf(json, jasperFilename);
+        } catch (JsonSyntaxException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public byte[] exportToPdf(String jsonInput, String jasperFilename) {

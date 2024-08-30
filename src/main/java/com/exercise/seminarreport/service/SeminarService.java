@@ -23,19 +23,14 @@ import java.util.regex.Pattern;
 @Service
 public class SeminarService {
 
-    private final DateService dateService;
-
     private final String minRegex = "(\\d+)min";
 
     private final DateTimeFormatter dateTimeFormatter;
     private final Pattern minutePattern;
-    private Matcher minuteMatcher;
 
-    public SeminarService(DateService dateService) {
-        this.dateService = dateService;
+    public SeminarService() {
         this.minutePattern = Pattern.compile(minRegex);
-        String datePattern = "yyyy-MM-dd";
-        this.dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     }
 
     public List<SeminarResponse> getSeminarResponse(MultipartFile file) {
@@ -52,78 +47,68 @@ public class SeminarService {
             String line = null;
             int countDay = 0;
             boolean isRunning = true;
-
+            String date = reader.readLine();
+            try {
+                LocalDate parsedDate = LocalDate.parse(date, dateTimeFormatter);
+                seminarDateTime = parsedDate.atTime(9, 0);
+                log.info("Get startDate From File.");
+            } catch (DateTimeParseException e) {
+                throw new Error("Seminar service: Invalid date format.");
+            }
             while (isRunning) {
-                if (countDay == 0) {
-                    String date = reader.readLine();
-                    try {
-                        LocalDate parsedDate = LocalDate.parse(date, dateTimeFormatter);
-                        seminarDateTime = parsedDate.atTime(9, 0);
-                        countDay++;
-                        log.info("Get startDate From File.");
-                    } catch (DateTimeParseException e) {
-                        isRunning = false;
-                        throw new Error("Seminar service: Invalid date format.");
+                SeminarResponse response = new SeminarResponse();
+                List<SeminarDetailResponse> detailResponseList = new ArrayList<>();
+                response.setDate(seminarDateTime.toLocalDate());
+                while ((line = reader.readLine()) != null) {
+                    Matcher matcher = minutePattern.matcher(line);
+
+                    if (!matcher.find()) {
+                        continue;
                     }
-                } else {
-                    SeminarResponse response = new SeminarResponse();
-                    List<SeminarDetailResponse> detailResponseList = new ArrayList<>();
-                    response.setDate(seminarDateTime.toLocalDate());
-                    while ((line = reader.readLine()) != null) {
-                        Matcher matcher = minutePattern.matcher(line);
 
-                        if (!matcher.find()) {
-                            continue;
+                    line = line.replaceAll(minRegex, "");
+                    int duration = Integer.parseInt(matcher.group(1));
+                    LocalDateTime newTime = seminarDateTime.plusMinutes(duration);
+
+                    if (DateService.isLunch(newTime)) {
+                        if(DateService.isEqualLunch(newTime)){
+                            detailResponseList.add(appendSeminarDetail(seminarDateTime, duration, line));
+                            detailResponseList.add(appendLunch());
+                            seminarDateTime = DateService.setToAfternoon(seminarDateTime);
+                        }else {
+                            detailResponseList.add(appendLunch());
+                            seminarDateTime = DateService.setToAfternoon(seminarDateTime);
+                            detailResponseList.add(appendSeminarDetail(seminarDateTime, duration, line));
+                            seminarDateTime = seminarDateTime.plusMinutes(duration);
                         }
-
-                        if (dateService.isNineAM(seminarDateTime)) {
-                            countDay++;
-                        }
-
-                        line = line.replaceAll(minRegex, "");
-                        int duration = Integer.parseInt(matcher.group(1));
-                        LocalDateTime newTime = seminarDateTime.plusMinutes(duration);
-
-                        if (dateService.isLunch(newTime)) {
-                            if(dateService.isEqualLunch(newTime)){
-                                detailResponseList.add(appendSeminarDetail(seminarDateTime, duration, line));
-                                detailResponseList.add(appendLunch());
-                                seminarDateTime = dateService.setToAfternoon(seminarDateTime);
-                            }else {
-                                detailResponseList.add(appendLunch());
-                                seminarDateTime = dateService.setToAfternoon(seminarDateTime);
-                                detailResponseList.add(appendSeminarDetail(seminarDateTime, duration, line));
-                                seminarDateTime = seminarDateTime.plusMinutes(duration);
-                            }
-                        } else if (dateService.isNetworkingEvent(newTime)) {
-                            LocalDateTime time = newTime;
-                            if (dateService.isAfterFivePM(newTime)) {
-                                time = seminarDateTime;
-                            } else {
-                                detailResponseList.add(appendSeminarDetail(seminarDateTime, duration, line));
-                            }
-                            detailResponseList.add(appendNetworkingEvent(time));
-                            seminarDateTime = dateService.setToNextDay(seminarDateTime);
-                            seminarDateTime = dateService.checkWeekend(seminarDateTime);
-                            break;
+                    } else if (DateService.isNetworkingEvent(newTime)) {
+                        LocalDateTime time = newTime;
+                        if (DateService.isAfterFivePM(newTime)) {
+                            time = seminarDateTime;
                         } else {
                             detailResponseList.add(appendSeminarDetail(seminarDateTime, duration, line));
-                            seminarDateTime = newTime;
                         }
+                        detailResponseList.add(appendNetworkingEvent(time));
+                        seminarDateTime = DateService.setToNextDay(seminarDateTime);
+                        seminarDateTime = DateService.checkWeekend(seminarDateTime);
+                        break;
+                    } else {
+                        detailResponseList.add(appendSeminarDetail(seminarDateTime, duration, line));
+                        seminarDateTime = newTime;
                     }
+                }
 
-                    if(line == null) {
-                        if (dateService.checkLastNetworkingEvent(seminarDateTime)) {
-                            detailResponseList.add(appendNetworkingEvent(seminarDateTime));
-                        }
-                        isRunning = false;
+                if(line == null) {
+                    if (DateService.checkLastNetworkingEvent(seminarDateTime)) {
+                        detailResponseList.add(appendNetworkingEvent(seminarDateTime));
                     }
+                    isRunning = false;
+                }
 
-                    if(!detailResponseList.isEmpty()) {
-                        response.setAgendas(detailResponseList);
-                            responseList.add(response);
-                        log.info("Add\t"+response.getDate());
-                    }
+                if(!detailResponseList.isEmpty()) {
+                    response.setAgendas(detailResponseList);
+                        responseList.add(response);
+                    log.info("Add\t{}", response.getDate());
                 }
             }
         } catch (IOException e) {
@@ -143,7 +128,7 @@ public class SeminarService {
     private SeminarDetailResponse appendLunch() {
         SeminarDetailResponse response = new SeminarDetailResponse();
         response.setTime(LocalTime.of(12, 0).toString());
-        response.setSeminar(new String("Lunch"));
+        response.setSeminar("Lunch");
         response.setDuration(String.valueOf(60));
         return response;
     }
@@ -151,7 +136,7 @@ public class SeminarService {
     private SeminarDetailResponse appendNetworkingEvent(LocalDateTime localDateTime) {
         SeminarDetailResponse response = new SeminarDetailResponse();
         response.setTime(localDateTime.toLocalTime().toString());
-        response.setSeminar(new String("Networking Event"));
+        response.setSeminar("Networking Event");
         response.setDuration(String.valueOf(60));
         return response;
     }
