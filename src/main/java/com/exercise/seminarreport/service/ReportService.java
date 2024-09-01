@@ -28,10 +28,11 @@ public class ReportService {
         String json;
         try {
             json = objectMapper.writeValueAsString(seminarResponseList);
-            return getPdf(json, jasperFilename);
-        } catch (JsonSyntaxException | JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error processing JSON", e);
         }
+
+        return getPdf(json, jasperFilename);
     }
 
     public byte[] exportToPdf(String jsonInput, String jasperFilename) {
