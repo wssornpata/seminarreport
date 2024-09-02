@@ -3,13 +3,10 @@ package com.exercise.seminarreport.service;
 import com.exercise.seminarreport.dto.seminar.response.SeminarResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapter;
-import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JsonDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -18,54 +15,61 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Service
 public class ReportService {
-    final TypeAdapter<JsonElement> strictAdapter = new Gson().getAdapter(JsonElement.class);
-    final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String jasperFilename) {
-        String json;
+        logger.info("Start export to PDF.");
         try {
-            json = objectMapper.writeValueAsString(seminarResponseList);
+            String json = objectMapper.writeValueAsString(seminarResponseList);
+            return generatePdfFromJson(json, jasperFilename);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error processing JSON", e);
+            logger.error("Error processing JSON", e);
+            throw new IllegalArgumentException("Error processing JSON", e);
         }
-
-        return getPdf(json, jasperFilename);
     }
 
     public byte[] exportToPdf(String jsonInput, String jasperFilename) {
-        return getPdf(jsonInput, jasperFilename);
+        return generatePdfFromJson(jsonInput, jasperFilename);
     }
 
-    private byte[] getPdf(String json, String jasperFilename) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        File file;
-        try {
-            if(!isValid(json)){
-                throw new Error("Invalid JSON.");
+    private byte[] generatePdfFromJson(String json, String jasperFilename) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            if (!isValidJson(json)) {
+                throw new IllegalArgumentException("Invalid JSON.");
             }
-            file = ResourceUtils.getFile("classpath:jasper-template/"+jasperFilename);
+            File file = ResourceUtils.getFile("classpath:jasper-template/" + jasperFilename);
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-            InputStream jsonInputStream = new ByteArrayInputStream(json.getBytes());
-            JsonDataSource jsonDataSource = new JsonDataSource(jsonInputStream);
-            Map<String, Object> dataSource = new HashMap<>();
-            dataSource.put("datasource",jsonDataSource);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, dataSource, jsonDataSource);
-            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
-            return out.toByteArray();
-        } catch (FileNotFoundException | JRException e) {
-            throw new Error("Report generation failed: " + e.getMessage());
+            try (InputStream jsonInputStream = new ByteArrayInputStream(json.getBytes())) {
+                JsonDataSource jsonDataSource = new JsonDataSource(jsonInputStream);
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("datasource", jsonDataSource);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jsonDataSource);
+                JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+                return out.toByteArray();
+            }
+        } catch (FileNotFoundException e) {
+            logger.error("Jasper template file not found", e);
+            throw new IllegalStateException("Jasper template file not found: " + jasperFilename, e);
+        } catch (JRException e) {
+            logger.error("Jasper report generation failed", e);
+            throw new IllegalStateException("Jasper report generation failed", e);
+        } catch (IOException e) {
+            logger.error("IO error during PDF generation", e);
+            throw new IllegalStateException("IO error during PDF generation", e);
         }
     }
 
-    public boolean isValid(String json) {
+    public boolean isValidJson(String json) {
         try {
-            strictAdapter.fromJson(json);
-        } catch (JsonSyntaxException | IOException e) {
+            objectMapper.readTree(json);
+            return true;
+        } catch (IOException e) {
+            logger.warn("Invalid JSON syntax", e);
             return false;
         }
-        return true;
     }
 }

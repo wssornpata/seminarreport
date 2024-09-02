@@ -23,7 +23,7 @@ public class QueueProducer implements AutoCloseable{
     private final String minRegex = "(\\d+)min";
 
     @Getter
-    private Queue<AgendaEntity> agendaQueue = new LinkedList<>();
+    private final Queue<AgendaEntity> agendaQueue = new LinkedList<>();
 
     @Getter
     private LocalDateTime localDateTime;

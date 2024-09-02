@@ -4,6 +4,8 @@ import com.exercise.seminarreport.dto.seminar.request.SeminarFileRequest;
 import com.exercise.seminarreport.service.ReportService;
 import com.exercise.seminarreport.service.SeminarService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j
 @RestController
 @RequestMapping("/seminar")
 public class SeminarController {
@@ -21,6 +22,8 @@ public class SeminarController {
 
     private final SeminarService seminarService;
     private final ReportService reportService;
+
+    private static final Logger logger = LoggerFactory.getLogger(SeminarController.class);
 
     public SeminarController(SeminarService seminarService, ReportService reportService) {
         this.seminarService = seminarService;
@@ -34,7 +37,7 @@ public class SeminarController {
             var response = seminarService.getSeminarResponse(file);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Error e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

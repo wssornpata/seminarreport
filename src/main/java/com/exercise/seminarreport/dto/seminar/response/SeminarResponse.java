@@ -12,5 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class SeminarResponse {
     private String date;
+//    private LocalDate date;
     private List<SeminarDetailResponse> agendas;
 }

@@ -10,10 +10,6 @@ import static com.exercise.seminarreport.constants.TimeConstants.*;
 @Service
 public class TimeService {
 
-    public static boolean isNineAM(LocalDateTime localDateTime) {
-        return localDateTime.toLocalTime().equals(NINE_AM);
-    }
-
     public static boolean isLunch(LocalDateTime localDateTime) {
         return (localDateTime.toLocalTime().isAfter(TWELVE_AM) || isEqualLunch(localDateTime)) && localDateTime.toLocalTime().isBefore(ONE_PM);
     }

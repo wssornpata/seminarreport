@@ -3,25 +3,26 @@ package com.exercise.seminarreport.service;
 import com.exercise.seminarreport.dto.seminar.response.SeminarDetailResponse;
 import com.exercise.seminarreport.dto.seminar.response.SeminarResponse;
 import com.exercise.seminarreport.entity.AgendaEntity;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Service
 public class SeminarService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SeminarService.class);
 
     public List<SeminarResponse> getSeminarResponse(MultipartFile file) {
         if (file.isEmpty()) {
             throw new Error("Seminar service: File is empty.");
         }
-        log.info("Receivced File.");
+        logger.info("Receivced File.");
 
         List<SeminarResponse> responseList = new ArrayList<>();
         try (QueueProducer queueProducer = new QueueProducer(file)) {
@@ -32,6 +33,7 @@ public class SeminarService {
             while (isRunning) {
                 SeminarResponse response = new SeminarResponse();
                 List<SeminarDetailResponse> detailResponseList = new ArrayList<>();
+
                 response.setDate(startDateTime.toLocalDate().toString());
 
                 while((agendaEntity = queueProducer.consume()) != null) {
@@ -77,11 +79,9 @@ public class SeminarService {
                 if(!detailResponseList.isEmpty()) {
                     response.setAgendas(detailResponseList);
                     responseList.add(response);
-                    log.info("Add\t{}", response.getDate());
+                    logger.info("Add\t{}", response.getDate());
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -90,6 +90,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, int minute, String line) {
         SeminarDetailResponse response = new SeminarDetailResponse();
+//        response.setTime(localDateTime.toLocalTime());
         response.setTime(localDateTime.toLocalTime().toString());
         response.setSeminar(line);
         response.setDuration(String.valueOf(minute));
@@ -98,6 +99,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendLunch() {
         SeminarDetailResponse response = new SeminarDetailResponse();
+//        response.setTime(LocalTime.of(12, 0));
         response.setTime(LocalTime.of(12, 0).toString());
         response.setSeminar("Lunch");
         response.setDuration(String.valueOf(60));
@@ -106,6 +108,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendNetworkingEvent(LocalDateTime localDateTime) {
         SeminarDetailResponse response = new SeminarDetailResponse();
+//        response.setTime(localDateTime.toLocalTime());
         response.setTime(localDateTime.toLocalTime().toString());
         response.setSeminar("Networking Event");
         response.setDuration(String.valueOf(60));

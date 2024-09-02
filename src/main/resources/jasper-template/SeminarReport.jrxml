@@ -58,9 +58,9 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d3262992-6b24-40fb-b51c-3425d38d3aa6"/>
 				</reportElement>
 				<textElement>
-					<font size="12"/>
+					<font fontName="THSarabunNew&#xD;&#xA;" size="12"/>
 				</textElement>
-				<text><![CDATA[Agendas]]></text>
+				<text><![CDATA[สวัสดี นี่ตารางเวลา]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
