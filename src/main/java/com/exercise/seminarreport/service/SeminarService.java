@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -20,9 +21,10 @@ public class SeminarService {
 
     public List<SeminarResponse> getSeminarResponse(MultipartFile file) {
         if (file.isEmpty()) {
-            throw new Error("Seminar service: File is empty.");
+            logger.error("Seminar service: File is empty.");
+            throw new IllegalArgumentException("File is empty.");
         }
-        logger.info("Receivced File.");
+        logger.info("Received File.");
 
         List<SeminarResponse> responseList = new ArrayList<>();
         try (QueueProducer queueProducer = new QueueProducer(file)) {
@@ -36,61 +38,66 @@ public class SeminarService {
 
                 response.setDate(startDateTime.toLocalDate().toString());
 
-                while((agendaEntity = queueProducer.consume()) != null) {
-                    String agendaName = agendaEntity.getAgendaName();
-                    int agendaDuration = agendaEntity.getAgendaDuration();
-                    LocalDateTime endDateTime = startDateTime.plusMinutes(agendaDuration);
+                while ((agendaEntity = queueProducer.consume()) != null) {
+                    try {
+                        String agendaName = agendaEntity.getAgendaName();
+                        int agendaDuration = agendaEntity.getAgendaDuration();
+                        LocalDateTime endDateTime = startDateTime.plusMinutes(agendaDuration);
 
-                    if (TimeService.isLunch(endDateTime)) {
-                        if (TimeService.isEqualLunch(endDateTime)) {
-                            detailResponseList.add(appendSeminarDetail(startDateTime, agendaDuration, agendaName));
-                            detailResponseList.add(appendLunch());
-                            startDateTime = TimeService.setToAfternoon(startDateTime);
+                        if (TimeService.isLunch(endDateTime)) {
+                            if (TimeService.isEqualLunch(endDateTime)) {
+                                detailResponseList.add(appendSeminarDetail(startDateTime, agendaDuration, agendaName));
+                                detailResponseList.add(appendLunch());
+                                startDateTime = TimeService.setToAfternoon(startDateTime);
+                            } else {
+                                detailResponseList.add(appendLunch());
+                                startDateTime = TimeService.setToAfternoon(startDateTime);
+                                detailResponseList.add(appendSeminarDetail(startDateTime, agendaDuration, agendaName));
+                                startDateTime = startDateTime.plusMinutes(agendaDuration);
+                            }
+                        } else if (TimeService.isNetworkingEvent(endDateTime)) {
+                            LocalDateTime time = endDateTime;
+                            if (TimeService.isAfterFivePM(endDateTime)) {
+                                time = startDateTime;
+                            } else {
+                                detailResponseList.add(appendSeminarDetail(startDateTime, agendaDuration, agendaName));
+                            }
+                            detailResponseList.add(appendNetworkingEvent(time));
+                            startDateTime = TimeService.setToNextDay(startDateTime);
+                            startDateTime = TimeService.checkWeekend(startDateTime);
+                            break;
                         } else {
-                            detailResponseList.add(appendLunch());
-                            startDateTime = TimeService.setToAfternoon(startDateTime);
                             detailResponseList.add(appendSeminarDetail(startDateTime, agendaDuration, agendaName));
-                            startDateTime = startDateTime.plusMinutes(agendaDuration);
+                            startDateTime = endDateTime;
                         }
-                    } else if (TimeService.isNetworkingEvent(endDateTime)) {
-                        LocalDateTime time = endDateTime;
-                        if (TimeService.isAfterFivePM(endDateTime)) {
-                            time = startDateTime;
-                        } else {
-                            detailResponseList.add(appendSeminarDetail(startDateTime, agendaDuration, agendaName));
-                        }
-                        detailResponseList.add(appendNetworkingEvent(time));
-                        startDateTime = TimeService.setToNextDay(startDateTime);
-                        startDateTime = TimeService.checkWeekend(startDateTime);
-                        break;
-                    } else {
-                        detailResponseList.add(appendSeminarDetail(startDateTime, agendaDuration, agendaName));
-                        startDateTime = endDateTime;
+                    } catch (NullPointerException e) {
+                        logger.error("Null value encountered: {}", e.getMessage());
+                        throw new RuntimeException("Error processing agenda entity", e);
                     }
                 }
 
-                if(queueProducer.isLastline()) {
+                if (queueProducer.isLastline()) {
                     if (TimeService.checkLastNetworkingEvent(startDateTime)) {
                         detailResponseList.add(appendNetworkingEvent(startDateTime));
                     }
                     isRunning = false;
                 }
 
-                if(!detailResponseList.isEmpty()) {
+                if (!detailResponseList.isEmpty()) {
                     response.setAgendas(detailResponseList);
                     responseList.add(response);
                     logger.info("Add\t{}", response.getDate());
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("Unexpected error: {}", e.getMessage());
+            throw new RuntimeException("An unexpected error occurred", e);
         }
         return responseList;
     }
 
     private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, int minute, String line) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-//        response.setTime(localDateTime.toLocalTime());
         response.setTime(localDateTime.toLocalTime().toString());
         response.setSeminar(line);
         response.setDuration(String.valueOf(minute));
@@ -99,7 +106,6 @@ public class SeminarService {
 
     private SeminarDetailResponse appendLunch() {
         SeminarDetailResponse response = new SeminarDetailResponse();
-//        response.setTime(LocalTime.of(12, 0));
         response.setTime(LocalTime.of(12, 0).toString());
         response.setSeminar("Lunch");
         response.setDuration(String.valueOf(60));
@@ -108,7 +114,6 @@ public class SeminarService {
 
     private SeminarDetailResponse appendNetworkingEvent(LocalDateTime localDateTime) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-//        response.setTime(localDateTime.toLocalTime());
         response.setTime(localDateTime.toLocalTime().toString());
         response.setSeminar("Networking Event");
         response.setDuration(String.valueOf(60));
