@@ -1,4 +1,4 @@
-2022-02-25
+2022-02-wa25
 Writing Fast Tests Against Enterprise Rails 60min
 Overdoing it in Python 45min
 Lua for the Masses 30min
