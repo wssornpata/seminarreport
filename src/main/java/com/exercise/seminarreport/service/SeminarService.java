@@ -35,7 +35,7 @@ public class SeminarService {
                 SeminarResponse response = new SeminarResponse();
                 List<SeminarDetailResponse> detailResponseList = new ArrayList<>();
 
-                response.setDate(startDateTime.toLocalDate().toString());
+                response.setDate(startDateTime.toLocalDate());
 
                 while ((agendaEntity = queueProducer.consume()) != null) {
                     try {
@@ -95,7 +95,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendSeminarDetail(LocalDateTime localDateTime, int minute, String line) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTime(localDateTime.toLocalTime().toString());
+        response.setTime(localDateTime.toLocalTime());
         response.setSeminar(line);
         response.setDuration(String.valueOf(minute));
         return response;
@@ -103,7 +103,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendLunch() {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTime(LocalTime.of(12, 0).toString());
+        response.setTime(LocalTime.of(12, 0));
         response.setSeminar("Lunch");
         response.setDuration(String.valueOf(60));
         return response;
@@ -111,7 +111,7 @@ public class SeminarService {
 
     private SeminarDetailResponse appendNetworkingEvent(LocalDateTime localDateTime) {
         SeminarDetailResponse response = new SeminarDetailResponse();
-        response.setTime(localDateTime.toLocalTime().toString());
+        response.setTime(localDateTime.toLocalTime());
         response.setSeminar("Networking Event");
         response.setDuration(String.valueOf(60));
         return response;

@@ -106,7 +106,7 @@
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("hh:mma").format(java.time.LocalTime.parse($F{timeDuration}, java.time.format.DateTimeFormatter.ofPattern("HH:mm")))
+								<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("hh:mma").format(java.time.LocalTime.parse($F{timeDuration}, java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")))
 ]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>

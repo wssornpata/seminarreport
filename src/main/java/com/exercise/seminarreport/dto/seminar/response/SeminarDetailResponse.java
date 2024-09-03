@@ -10,8 +10,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeminarDetailResponse {
-    private String time;
-//    private LocalTime time;
+//    private String time;
+    private LocalTime time;
     private String seminar;
     private String duration;
 }

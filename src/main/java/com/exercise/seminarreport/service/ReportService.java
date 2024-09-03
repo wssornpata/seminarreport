@@ -3,6 +3,7 @@ package com.exercise.seminarreport.service;
 import com.exercise.seminarreport.dto.seminar.response.SeminarResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JsonDataSource;
@@ -20,9 +21,11 @@ import java.util.Map;
 public class ReportService {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
+    private final ObjectMapper objectMapper = new ObjectMapper()
+                                                .registerModule(new JavaTimeModule())
+                                                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String jasperFilename) {
+        logger.info("SeminarList : " + seminarResponseList.toString());
         logger.info("Start export to PDF.");
         try {
             String json = objectMapper.writeValueAsString(seminarResponseList);
