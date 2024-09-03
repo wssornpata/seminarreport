@@ -29,15 +29,16 @@ public class TimeService {
     public static boolean isAfterFivePM(LocalDateTime localDateTime) {
         return localDateTime.toLocalTime().isAfter(FIVE_PM);
     }
+
     public static LocalDateTime setToAfternoon(LocalDateTime localDateTime) {
-        return  localDateTime.with(ONE_PM);
+        return localDateTime.with(ONE_PM);
     }
 
     public static LocalDateTime setToNextDay(LocalDateTime localDateTime) {
         return localDateTime.plusDays(1).with(NINE_AM);
     }
 
-    public static  LocalDateTime checkWeekend(LocalDateTime localDateTime) {
+    public static LocalDateTime checkWeekend(LocalDateTime localDateTime) {
         while (localDateTime.getDayOfWeek() == DayOfWeek.SATURDAY || localDateTime.getDayOfWeek() == DayOfWeek.SUNDAY) {
             localDateTime = localDateTime.plusDays(1);
         }

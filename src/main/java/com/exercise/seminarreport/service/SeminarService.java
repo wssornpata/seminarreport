@@ -3,7 +3,7 @@ package com.exercise.seminarreport.service;
 import com.exercise.seminarreport.dto.seminar.response.SeminarDetailResponse;
 import com.exercise.seminarreport.dto.seminar.response.SeminarResponse;
 import com.exercise.seminarreport.entity.AgendaEntity;
-import com.exercise.seminarreport.exception.FileIsEmptyException;
+import com.exercise.seminarreport.exception.LineNullException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,21 +11,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SeminarService {
 
-    private final DateTimeFormatter dateOutputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final DateTimeFormatter timeOutputFormatter = DateTimeFormatter.ofPattern("HH:mm");
     private static final Logger logger = LoggerFactory.getLogger(SeminarService.class);
 
     public List<SeminarResponse> getSeminarResponse(MultipartFile file) {
         if (file.isEmpty()) {
-            logger.error("Seminar service: File is empty.");
-            throw new FileIsEmptyException("File is empty.");
+            throw new IllegalStateException("File is empty");
         }
         logger.info("Received File.");
 
@@ -74,8 +70,7 @@ public class SeminarService {
                             startDateTime = endDateTime;
                         }
                     } catch (NullPointerException e) {
-                        logger.error("Null value encountered: {}", e.getMessage());
-                        throw new RuntimeException("Error processing agenda entity", e);
+                        throw new LineNullException("Error processing agenda entity");
                     }
                 }
 
@@ -92,11 +87,7 @@ public class SeminarService {
                     logger.info("Add\t{}", response.getDate());
                 }
             }
-        } catch (FileIsEmptyException e) {
-            logger.error("File is empty: {}", e.getMessage());
-            throw e;
         } catch (Exception e) {
-            logger.error("Unexpected error: {}", e.getMessage());
             throw new RuntimeException("An unexpected error occurred", e);
         }
         return responseList;

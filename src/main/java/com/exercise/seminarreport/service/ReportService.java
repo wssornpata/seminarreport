@@ -29,7 +29,6 @@ public class ReportService {
             logger.info("JSON: " + json);
             return generatePdfFromJson(json, jasperFilename);
         } catch (JsonProcessingException e) {
-            logger.error("Error processing JSON", e);
             throw new IllegalArgumentException("Error processing JSON", e);
         }
     }
@@ -54,13 +53,10 @@ public class ReportService {
                 return out.toByteArray();
             }
         } catch (FileNotFoundException e) {
-            logger.error("Jasper template file not found", e);
             throw new IllegalStateException("Jasper template file not found: " + jasperFilename, e);
         } catch (JRException e) {
-            logger.error("Jasper report generation failed", e);
             throw new IllegalStateException("Jasper report generation failed", e);
         } catch (IOException e) {
-            logger.error("IO error during PDF generation", e);
             throw new IllegalStateException("IO error during PDF generation", e);
         }
     }

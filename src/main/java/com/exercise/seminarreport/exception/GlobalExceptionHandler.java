@@ -15,51 +15,58 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(QueueProducerException.class)
+    public ResponseEntity<Object> handleQueueServiceInitializeException(QueueProducerException ex) {
+        String msg = "Queue service initialize error " + ex.getMessage();
+        logger.error(msg);
+        return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(AgendaProcessingException.class)
     public ResponseEntity<Object> handleAgendaProcessingException(AgendaProcessingException ex) {
-        String msg = "Agenda processing error "+ex.getMessage();
+        String msg = "Agenda processing error: " + ex.getMessage();
         logger.error(msg);
         return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(InvalidDateFormatException.class)
-    public ResponseEntity<Object> handleInvalikDateFormatException(InvalidDateFormatException ex) {
-        String msg = "Invalid date format "+ex.getMessage();
+    public ResponseEntity<Object> handleInvalidDateFormatException(InvalidDateFormatException ex) {
+        String msg = "Invalid date format: " + ex.getMessage();
         logger.error(msg);
         return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LineNullException.class)
     public ResponseEntity<Object> handleLineNullException(LineNullException ex) {
-        String msg = "Line null "+ ex.getMessage();
+        String msg = "Line is null: " + ex.getMessage();
         logger.error(msg);
         return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Object> handleIOException(IOException ex) {
-        String msg = "I/O error " + ex.getMessage();
+        String msg = "I/O error: " + ex.getMessage();
         logger.error(msg);
         return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex) {
-        String msg = "An error occurred "+ ex.getMessage();
+        String msg = "An error occurred: " + ex.getMessage();
         logger.error(msg);
         return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
-        String msg = "Illegal argument " + ex.getMessage();
+        String msg = "Illegal argument: " + ex.getMessage();
         logger.error(msg);
         return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Object> handleIllegalStateException(IllegalStateException ex) {
-        String msg = "Illegal state " +ex.getMessage();
+        String msg = "Illegal state: " + ex.getMessage();
         logger.error(msg);
         return new ResponseEntity<>(new FailureResponse(msg), HttpStatus.INTERNAL_SERVER_ERROR);
     }

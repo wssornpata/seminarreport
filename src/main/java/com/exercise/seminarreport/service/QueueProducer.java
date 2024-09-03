@@ -1,9 +1,9 @@
 package com.exercise.seminarreport.service;
 
 import com.exercise.seminarreport.entity.AgendaEntity;
-import com.exercise.seminarreport.exception.AgendaProcessingException;
 import com.exercise.seminarreport.exception.InvalidDateFormatException;
 import com.exercise.seminarreport.exception.LineNullException;
+import com.exercise.seminarreport.exception.QueueProducerException;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,6 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.regex.Matcher;
@@ -45,8 +44,7 @@ public class QueueProducer implements AutoCloseable {
             this.processDate();
             this.processAgendaQueue();
         } catch (IOException e) {
-            logger.error("Error initializing QueueProducer: {}", e.getMessage());
-            throw new RuntimeException(e);
+            throw new QueueProducerException("Error initializing in constructor");
         }
     }
 
@@ -71,10 +69,8 @@ public class QueueProducer implements AutoCloseable {
         try {
             String dateInput = reader.readLine();
             localDateTime = LocalDate.parse(dateInput, dateTimeFormatter).atTime(9, 0);
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading date from file", e);
-        } catch (DateTimeException e){
-            throw new DateTimeException("Date input is null");
+        } catch (IOException | DateTimeException e) {
+            throw new InvalidDateFormatException("Error reading date from file");
         }
     }
 
@@ -91,8 +87,7 @@ public class QueueProducer implements AutoCloseable {
         try {
             reader.close();
         } catch (IOException e) {
-            logger.error("Error closing reader: {}", e.getMessage());
-            throw e;
+            throw new IOException("Error closing stream");
         }
     }
 }
