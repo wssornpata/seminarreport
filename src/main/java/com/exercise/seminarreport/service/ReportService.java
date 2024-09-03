@@ -25,11 +25,9 @@ public class ReportService {
                                                 .registerModule(new JavaTimeModule())
                                                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String jasperFilename) {
-        logger.info("SeminarList : " + seminarResponseList.toString());
         logger.info("Start export to PDF.");
         try {
             String json = objectMapper.writeValueAsString(seminarResponseList);
-            logger.info("JSON: " + json);
             return generatePdfFromJson(json, jasperFilename);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Error processing JSON", e);
