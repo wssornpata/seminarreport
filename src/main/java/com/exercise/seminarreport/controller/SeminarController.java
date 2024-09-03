@@ -3,6 +3,7 @@ package com.exercise.seminarreport.controller;
 import com.exercise.seminarreport.dto.seminar.request.SeminarFileRequest;
 import com.exercise.seminarreport.service.ReportService;
 import com.exercise.seminarreport.service.SeminarService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -30,14 +31,14 @@ public class SeminarController {
     }
 
     @PostMapping(value = "/uploadFile", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadFile(@ModelAttribute SeminarFileRequest seminarFileRequest) {
+    public ResponseEntity<?> uploadFile(@Valid @ModelAttribute SeminarFileRequest seminarFileRequest) {
         MultipartFile file = seminarFileRequest.getFile();
         var response = seminarService.getSeminarResponse(file);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping(value = "/uploadFileAndExport", produces = MediaType.APPLICATION_PDF_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadFileAndExport(@ModelAttribute SeminarFileRequest seminarFileRequest) {
+    public ResponseEntity<?> uploadFileAndExport(@Valid @ModelAttribute SeminarFileRequest seminarFileRequest) {
         MultipartFile file = seminarFileRequest.getFile();
         var response = seminarService.getSeminarResponse(file);
         byte[] report = reportService.exportToPdf(response, jasperPath);
@@ -48,7 +49,7 @@ public class SeminarController {
     }
 
     @PostMapping(value = "/exportPdf", produces = MediaType.APPLICATION_PDF_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> exportPdf(@RequestBody String jsonInput) {
+    public ResponseEntity<?> exportPdf(@Valid @RequestBody String jsonInput) {
         byte[] report = reportService.exportToPdf(jsonInput, jasperPath);
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)

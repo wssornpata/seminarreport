@@ -106,7 +106,8 @@
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("hh:mma").format(java.time.LocalTime.parse($F{timeDuration}, java.time.format.DateTimeFormatter.ofPattern("HH:mm")))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("hh:mma").format(java.time.LocalTime.parse($F{timeDuration}, java.time.format.DateTimeFormatter.ofPattern("HH:mm")))
+]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -163,7 +164,7 @@
 				<textElement>
 					<font fontName="THSarabunNew" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Day  " + $V{REPORT_COUNT} + ": " + java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy").format(java.time.LocalDate.parse($F{date}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Day " + $V{REPORT_COUNT} + ": " + java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy").withLocale(new java.util.Locale("th")).format(java.time.LocalDate.parse($F{date}))]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

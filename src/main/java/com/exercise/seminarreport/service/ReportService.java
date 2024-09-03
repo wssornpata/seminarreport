@@ -24,9 +24,9 @@ public class ReportService {
 
     public byte[] exportToPdf(List<SeminarResponse> seminarResponseList, String jasperFilename) {
         logger.info("Start export to PDF.");
-            try {
-                String json = objectMapper.writeValueAsString(seminarResponseList);
-            logger.info("JSOOSOSOOSON\t"+json);
+        try {
+            String json = objectMapper.writeValueAsString(seminarResponseList);
+            logger.info("JSON: " + json);
             return generatePdfFromJson(json, jasperFilename);
         } catch (JsonProcessingException e) {
             logger.error("Error processing JSON", e);

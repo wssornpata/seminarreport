@@ -1,8 +1,9 @@
 package com.exercise.seminarreport.service;
 
 import com.exercise.seminarreport.entity.AgendaEntity;
-import com.exercise.seminarreport.hadler.AgendaProcessingException;
-import com.exercise.seminarreport.hadler.InvalidDateFormatException;
+import com.exercise.seminarreport.exception.AgendaProcessingException;
+import com.exercise.seminarreport.exception.InvalidDateFormatException;
+import com.exercise.seminarreport.exception.LineNullException;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -61,26 +63,18 @@ public class QueueProducer implements AutoCloseable {
                 agendaQueue.add(new AgendaEntity(agendaName, timeDuration));
             }
         } catch (IOException e) {
-            logger.error("Error processing agenda queue: {}", e.getMessage());
-            throw new AgendaProcessingException("Error processing agenda queue");
+            throw new LineNullException("Agenda producing is null");
         }
     }
 
     private void processDate() {
         try {
             String dateInput = reader.readLine();
-            if (dateInput != null) {
-                localDateTime = LocalDate.parse(dateInput, dateTimeFormatter).atTime(9, 0);
-            } else {
-                logger.error("Date input is null");
-                throw new RuntimeException("Date input is null");
-            }
+            localDateTime = LocalDate.parse(dateInput, dateTimeFormatter).atTime(9, 0);
         } catch (IOException e) {
-            logger.error("Error reading date from file: {}", e.getMessage());
             throw new RuntimeException("Error reading date from file", e);
-        } catch (DateTimeParseException e) {
-            logger.error("Error parsing date: {}", e.getMessage());
-            throw new InvalidDateFormatException("Invalid date format");
+        } catch (DateTimeException e){
+            throw new DateTimeException("Date input is null");
         }
     }
 
